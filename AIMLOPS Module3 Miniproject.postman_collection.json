@@ -1,0 +1,61 @@
+{
+	"info": {
+		"_postman_id": "c3cf16ac-bb68-4fe0-84c1-81bef1b66fb8",
+		"name": "AIMLOPS Module3 Miniproject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2906095"
+	},
+	"item": [
+		{
+			"name": "Prediction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"dteday\": {\r\n    \"0\": \"2012-11-05\",\r\n    \"1\": \"2011-07-13\"\r\n  },\r\n  \"season\": {\r\n    \"0\": \"winter\",\r\n    \"1\": \"fall\"\r\n  },\r\n  \"hr\": {\r\n    \"0\": \"6am\",\r\n    \"1\": \"4am\"\r\n  },\r\n  \"holiday\": {\r\n    \"0\": \"No\",\r\n    \"1\": \"No\"\r\n  },\r\n  \"weekday\": {\r\n    \"0\": \"Mon\",\r\n    \"1\": \"Wed\"\r\n  },\r\n  \"workingday\": {\r\n    \"0\": \"Yes\",\r\n    \"1\": \"Yes\"\r\n  },\r\n  \"weathersit\": {\r\n    \"0\": \"Mist\",\r\n    \"1\": \"Clear\"\r\n  },\r\n  \"temp\": {\r\n    \"0\": 6.1,\r\n    \"1\": 26.78\r\n  },\r\n  \"atemp\": {\r\n    \"0\": 3.0014,\r\n    \"1\": 28.9988\r\n  },\r\n  \"hum\": {\r\n    \"0\": 49,\r\n    \"1\": 58\r\n  },\r\n  \"windspeed\": {\r\n    \"0\": 19.0012,\r\n    \"1\": 16.9979\r\n  },\r\n  \"casual\": {\r\n    \"0\": 4,\r\n    \"1\": 0\r\n  },\r\n  \"registered\": {\r\n    \"0\": 135,\r\n    \"1\": 5\r\n  },\r\n  \"cnt\": {\r\n    \"0\": 139,\r\n    \"1\": 5\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/predict",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"predict"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Model Performances",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/metrics",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"metrics"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
