@@ -1,0 +1,17 @@
+dataset_configuration:
+  csv_file_path: bike-sharing-dataset.csv
+  numerical_variables: ['temp', 'atemp', 'hum', 'windspeed']
+  categorical_variables: ['season', 'hr', 'holiday', 'weekday', 'workingday', 'weathersit', 'yr', 'mnth']
+  Target_feature: cnt
+  unused_column: ['dteday', 'casual', 'registered']
+models:
+  - model_name: LinearRegression
+    model_parameters:
+      fit_intercept: True
+      copy_X: True
+  - model_name: RandomForestRegressor
+    model_parameters:
+      n_estimators: 100
+  - model_name: SGDRegressor
+    model_parameters:
+      penalty: l2

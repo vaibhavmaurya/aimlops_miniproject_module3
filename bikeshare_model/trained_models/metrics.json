@@ -1,0 +1,1 @@
+{"LinearRegression": {"r2_score": 0.6386840735575445, "mean_squared_error": 12239.420069884607}, "RandomForestRegressor": {"r2_score": 0.939020390827566, "mean_squared_error": 2065.6577740911594}, "SGDRegressor": {"r2_score": 0.637124057432191, "mean_squared_error": 12292.264938534583}}
