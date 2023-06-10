@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from predict import final_prediction
 from trained_models import get_metrics
+from flask_swagger_ui import get_swaggerui_blueprint
+# from flask import  abort, Blueprint
 
 app = Flask(__name__)
 
@@ -9,6 +11,19 @@ app = Flask(__name__)
 # LinearRegression = joblib.load('LinearRegression.pkl')
 # RandomForestRegressor = joblib.load('RandomForestRegressor.pkl')
 # SGDRegressor = joblib.load('SGDRegressor.pkl')
+
+
+### swagger specific ###
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "bikeshare-model"
+    }
+)
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 
 @app.route('/predict', methods=['POST'])
@@ -39,7 +54,6 @@ def predict_api():
     return jsonify(predictions)
 
 
-
 @app.route('/metrics', methods=['GET'])
 def get_model_performance():
     """
@@ -60,4 +74,5 @@ def get_model_performance():
 
 
 if __name__ == '__main__':
+    # app.run(debug=True,host="10.64.23.135",port="8081")
     app.run(debug=True)
