@@ -1,0 +1,111 @@
+{
+    "swagger" : "2.0",
+    "info": {
+      "description": "bike-share-model",
+      "version": "1.0.0",
+      "title": "bikeshare-model",
+      "contact": {
+        "email": "ramakanthjosyula@gmail.com"
+      },
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "schema": {
+      "input_data" :{
+        "type" : "object"
+        },
+        "predict_response" : {
+          "type" : "object"
+        }
+       },
+
+    "paths" : 
+      {
+        "/predict" :{
+          "post" : {
+            "description" : "Get your bike share prediction",
+            "consumes" : [
+              "application/json"
+            ],
+            "produces" : [
+              "application/json"
+
+            ],
+            "parameters" : [
+              {
+                "in" : "body",
+                "name" : "inpiut_data",
+                "required" : true,
+                "schema" : {
+                  "$ref" : "#/schema/input_data"
+                }
+              }
+
+            ],
+            "responses" : {
+              "200" : {
+                "description" : "OK",
+                "schema" : {
+                  "$ref" : "#/schema/predict_response"
+                }
+              }
+            }
+
+          }
+        },
+
+
+
+        "/metrics" : {
+          "get" : {
+            "description" : "Gets Prediction results",
+            "responses": {
+              "200": {
+                "description": "Successfully fetched all metrics",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "number"
+                          },
+                          "id": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "body": {
+                            "type": "string"
+                          }
+                        },
+                        "example": {
+                            "LinearRegression": {
+                              "mean_squared_error": 12238.511469248931,
+                              "r2_score": 0.6387108960604548
+                            },
+                            "RandomForestRegressor": {
+                              "mean_squared_error": 2025.4449455873212,
+                              "r2_score": 0.940207500617309
+                            },
+                            "SGDRegressor": {
+                              "mean_squared_error": 12242.823250100544,
+                              "r2_score": 0.6385836093847691
+                            }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+  
