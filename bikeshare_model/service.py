@@ -29,7 +29,9 @@ def predict_api():
         return jsonify({'message': 'No input data provided'}), 400
 
     # Assume we have a function `predict` which uses the models to predict output
+    print("Start Predicting")
     predictions = final_prediction(data)
+    print("Predicting Done")
 
     response = {
         'input': data,

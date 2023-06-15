@@ -1,1 +1,1 @@
-{"LinearRegression": {"r2_score": 0.6386840735575445, "mean_squared_error": 12239.420069884607}, "RandomForestRegressor": {"r2_score": 0.9392092856115379, "mean_squared_error": 2059.259045330968}, "SGDRegressor": {"r2_score": 0.6378985556520339, "mean_squared_error": 12266.02914774238}}
+{"LinearRegression": {"r2_score": 0.6386840735575445, "mean_squared_error": 12239.420069884607}, "RandomForestRegressor": {"r2_score": 0.9407893285148833, "mean_squared_error": 2005.7357782751965}, "SGDRegressor": {"r2_score": 0.6368345942358616, "mean_squared_error": 12302.070378581275}}
