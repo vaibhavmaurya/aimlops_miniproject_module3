@@ -43,6 +43,7 @@ To run the Flask REST API, perform the following steps:
 
   `$ python3 setup.py sdist bdist_wheel`
 
+
 - Install the lib here
   `$ pip3 install -U dist/bikeshare_model-1.0.0-py3-none-any.whl`
 
@@ -54,9 +55,6 @@ To run the Flask REST API, perform the following steps:
 
 - Run the FAST API Service
   `uvicorn api:app --reload`
-
-
-
 
 ## Conclusion
 This project provides a comprehensive pipeline for data preprocessing and model training on bike data. It offers flexibility for incorporating different models based on the configurations specified in the YAML file. Additionally, the Flask REST API endpoints allow for easy prediction and access to model performance metrics.
