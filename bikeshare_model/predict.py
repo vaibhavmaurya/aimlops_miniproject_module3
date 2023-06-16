@@ -19,6 +19,42 @@ data = {"dteday": {"0": "2012-11-05", "1": "2011-07-13"},
  "cnt": {"0": 139, "1": 5}}
 
 
+data = {
+    "inputs" : [ {
+    "dteday": "2012-11-05",
+    "season": "winter",
+    "hr": "6am",
+    "holiday": "No",
+    "weekday": "Mon",
+    "workingday": "Yes",
+    "weathersit": "Mist",
+    "temp": 6.1,
+    "atemp": 3.0014,
+    "hum": 49.0,
+    "windspeed": 19.0012,
+    "casual": 4,
+    "registered": 135,
+    "cnt": 139
+    },
+    {
+    "dteday":  "2011-07-13",
+    "season": "fall",
+    "hr": "4am",
+    "holiday": "No",
+    "weekday": "Wed",
+    "workingday": "Yes",
+    "weathersit": "Clear",
+    "temp": 26.78,
+    "atemp": 28.9988,
+    "hum": 58.0,
+    "windspeed": 16.9979,
+    "casual": 0,
+    "registered": 5,
+    "cnt": 5
+    }
+    ]
+}
+
 def final_prediction(input_data):
     """
     Function to load saved models, make predictions on test data.
