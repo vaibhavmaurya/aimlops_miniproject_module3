@@ -19,13 +19,13 @@ data = {'dteday': {'0': '2012-11-05', '1': '2011-07-13'},
  'cnt': {'0': 139, '1': 5}}
 
 
-def final_prediction(input_data):
+def final_prediction(input_data, config):
     """
     Function to load saved models, make predictions on test data.
     :param yaml_data: Dictionary object from parsed YAML data
     """
     input_data = pd.DataFrame(input_data)
-    output = load_models_and_predict(input_data)
+    output = load_models_and_predict(input_data, config)
     return output
 
 

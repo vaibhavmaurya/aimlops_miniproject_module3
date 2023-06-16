@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from predict import final_prediction
 from trained_models import get_metrics
+from config import get_config
 
 app = Flask(__name__)
 
@@ -9,6 +10,8 @@ app = Flask(__name__)
 # LinearRegression = joblib.load('LinearRegression.pkl')
 # RandomForestRegressor = joblib.load('RandomForestRegressor.pkl')
 # SGDRegressor = joblib.load('SGDRegressor.pkl')
+
+CONFIG = get_config("/mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/config/config.yml")
 
 
 @app.route('/predict', methods=['POST'])
@@ -30,7 +33,7 @@ def predict_api():
 
     # Assume we have a function `predict` which uses the models to predict output
     print("Start Predicting")
-    predictions = final_prediction(data)
+    predictions = final_prediction(data, CONFIG)
     print("Predicting Done")
 
     response = {
@@ -54,7 +57,7 @@ def get_model_performance():
     """
     try:
         # Return the JSON data as a response
-        return jsonify(get_metrics())
+        return jsonify(get_metrics(CONFIG))
     
     except FileNotFoundError:
         # Return a 404 status if the file is not found

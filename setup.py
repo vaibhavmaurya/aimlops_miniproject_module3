@@ -24,7 +24,7 @@ long_description = DESCRIPTION
 about = {}
 ROOT_DIR = Path(__file__).resolve().parent
 print(ROOT_DIR)
-REQUIREMENTS_DIR = ROOT_DIR / 'requirements'
+REQUIREMENTS_DIR = ROOT_DIR / 'bikeshare_model' / 'requirements'
 PACKAGE_DIR = ROOT_DIR / 'bikeshare_model'
 with open(PACKAGE_DIR / "VERSION") as f:
     _version = f.read().strip()
@@ -65,5 +65,5 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
-    ],
+    ]
 )
