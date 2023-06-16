@@ -4,23 +4,32 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, SGDRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
-from datasets import DataSet
+import argparse
 import os
-from pipeline import preprocess_pipeline
+import sys
 
-from config import DATASET_CONFIGURATION, MODEL_CONFIGURATION
+# Get the absolute path of the current file
+current_file_path = os.path.abspath(__file__)
+
+# Get the parent directory
+parent_dir = os.path.dirname(current_file_path)
+
+# Get the parent's parent directory
+grand_parent_dir = os.path.dirname(parent_dir)
+
+# Add the grand parent directory to the sys.path
+sys.path.insert(0, grand_parent_dir)
 
 
-current_file_path = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(current_file_path, 'trained_models')
-metrics_path = os.path.join(current_file_path, 'trained_models', 'metrics.json')
+from bikeshare_model.datasets import DataSet
+from bikeshare_model.pipeline import get_pipeline
+from bikeshare_model.config import get_config
 
+# print(f'''
 
-print(f'''
+#     MODEL_CONFIGURATION: {MODEL_CONFIGURATION}
 
-    MODEL_CONFIGURATION: {MODEL_CONFIGURATION}
-
-''')
+# ''')
 
 
 
@@ -33,25 +42,32 @@ MODEL_NAME_MAP = {
 
 
 
-def load_dataset():
-    dataset = DataSet(DATASET_CONFIGURATION)
+def load_dataset(dataset_config: dict) -> DataSet:
+    dataset = DataSet(dataset_config)
     return dataset
 
 
 
-def train_and_save_models():
+def train_and_save_models(config: dict):
     """
     Function to train models based on configurations in YAML data,
     compute metrics, save models and metrics to disk.
     :param yaml_data: Dictionary object from parsed YAML data
     :return: metrics as a dictionary object
     """
-    X_train, X_test, y_train, y_test = load_dataset().get_test_train_split()
+    DATASET_CONFIGURATION = config.get("dataset_configuration", None)
+    MODEL_CONFIGURATION = config.get("models", None)
+    model_path = config.get("model_save_path", None)
+    pipeline_save_path = config.get("pipeline_save_path", None)
+
+    X_train, X_test, y_train, y_test = load_dataset(DATASET_CONFIGURATION).get_test_train_split()
+
+    preprocess_pipeline = get_pipeline(DATASET_CONFIGURATION)
 
     X_train_transformed = preprocess_pipeline.fit_transform(X_train)
 
     # Save the pipeline to a file
-    joblib.dump(preprocess_pipeline, os.path.join(model_path, "preprocess_pipeline.joblib"))
+    joblib.dump(preprocess_pipeline, os.path.join(pipeline_save_path, "preprocess_pipeline.joblib"))
 
 
     metrics = {}
@@ -88,7 +104,7 @@ def train_and_save_models():
 
 
 
-def save_metrics(metrics):
+def save_metrics(metrics: dict, metrics_path: str):
     """
     Function to save metrics to a JSON file.
     :param metrics: metrics as a dictionary object
@@ -98,16 +114,38 @@ def save_metrics(metrics):
 
 
 
-def main():
+def parse_arguments():
     """
-    Main function
+    Function to parse command line arguments
     """
-    metrics = train_and_save_models()
-    save_metrics(metrics)
+    parser = argparse.ArgumentParser(description='Train a model based on provided config file.')
+    parser.add_argument('--config', type=str, required=True, help='Path to the config file.')
+    return parser.parse_args()
+
+
+def main(args):
+
+    print("-----------Training Starts-----------\n")
+    
+    CONFIG = get_config(args.config)
+
+    # global DATASET_CONFIGURATION
+    # DATASET_CONFIGURATION = CONFIG.get("dataset_configuration", None)
+    # global MODEL_CONFIGURATION
+    # MODEL_CONFIGURATION = CONFIG.get("models", None)
+
+    # global model_path
+    # model_path = CONFIG.get("model_save_path", None)
+    # global metrics_path
+    metrics_path = CONFIG.get("model_metrics_save_path", None)
+    
+    metrics = train_and_save_models(CONFIG)
+    save_metrics(metrics, metrics_path)
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    main(args)
 
 
 # def load_models_and_predict(yaml_data):

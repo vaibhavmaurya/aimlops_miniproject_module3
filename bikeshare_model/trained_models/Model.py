@@ -1,18 +1,12 @@
 __all__ = ["load_models_and_predict", "get_metrics"]
 
 import joblib
-from config import MODEL_CONFIGURATION, DATASET_CONFIGURATION
 import json
 import os
 
 
-current_file_path = os.path.dirname(os.path.abspath(__file__))
-preprocess_pipeline = joblib.load(os.path.join(current_file_path, "preprocess_pipeline.joblib"))
 
-
-
-
-def load_models_and_predict(input_data):
+def load_models_and_predict(input_data, config):
     """
     Function to load saved models, make predictions on input data.
 
@@ -23,6 +17,14 @@ def load_models_and_predict(input_data):
     Returns:
         dict: A dictionary with the input data and the predictions from each model.
     """
+    print('''You want to predict the following data:''')
+    print()
+    print(input_data)
+    preprocess_pipeline = joblib.load(os.path.join(config["pipeline_save_path"], "preprocess_pipeline.joblib"))
+    DATASET_CONFIGURATION = config.get("dataset_configuration", None)
+    MODEL_CONFIGURATION = config.get("models", None)
+    model_path = config.get("model_save_path", None)
+
     output = {}
 
     input_features = list(input_data.columns)
@@ -37,7 +39,7 @@ def load_models_and_predict(input_data):
         model_name = model_info["model_name"]
 
         # Load the model from a file
-        model = joblib.load(os.path.join(current_file_path, f"{model_name}.joblib"))
+        model = joblib.load(os.path.join(model_path, f"{model_name}.joblib"))
         # Make predictions on the input data
         y_pred = model.predict(test_data_input)
 
@@ -48,14 +50,16 @@ def load_models_and_predict(input_data):
 
 
 
-def get_metrics():
+def get_metrics(config):
     """
     Function to load metrics from a JSON file.
 
     Returns:
         dict: A dictionary with the metrics.
     """
-    with open(os.path.join(current_file_path, "metrics.json"), "r") as f:
+    model_metrics_save_path = config.get("model_metrics_save_path", None)
+
+    with open(model_metrics_save_path, "r") as f:
         metrics = json.load(f)
 
     return metrics

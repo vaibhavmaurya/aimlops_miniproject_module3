@@ -11,7 +11,7 @@ script_directory = os.path.dirname(os.path.abspath(__file__))
 class DataSet(pd.DataFrame):
 
   def __init__(self, dataset_config):
-    super().__init__(pd.read_csv(f'''{script_directory}/{dataset_config["csv_file_path"]}'''))
+    super().__init__(pd.read_csv(dataset_config["csv_file_path"]))
     self.dataset_config = dataset_config
     # Target_feature
 

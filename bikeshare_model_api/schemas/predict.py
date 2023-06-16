@@ -1,7 +1,7 @@
 __all__ = ["final_prediction"]
 
 import pandas as pd
-from bikeshare_model.trained_models import load_models_and_predict
+from trained_models import load_models_and_predict
 
 data = {'dteday': {'0': '2012-11-05', '1': '2011-07-13'},
  'season': {'0': 'winter', '1': 'fall'},

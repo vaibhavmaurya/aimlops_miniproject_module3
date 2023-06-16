@@ -1,3 +1,3 @@
-from .core import CONFIG, DATASET_CONFIGURATION, MODEL_CONFIGURATION
+from .core import get_config
 
-__all__ = ["CONFIG", "DATASET_CONFIGURATION", "MODEL_CONFIGURATION"]
+__all__ = ["get_config"]

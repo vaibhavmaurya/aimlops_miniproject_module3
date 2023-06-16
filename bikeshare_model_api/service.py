@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
-from predict import final_prediction
-from trained_models import get_metrics
-from config import get_config
+import sys
+import os
 
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from bikeshare_model import get_metrics, final_prediction, get_config
+
 
 app = Flask(__name__)
 
