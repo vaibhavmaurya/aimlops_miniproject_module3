@@ -1,13 +1,16 @@
 import yaml
 import os
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
 
-with open(f"{script_directory}/config.yml", "r") as f:
-    CONFIG = yaml.safe_load(f)
+def get_config(path: str):
+    print(f'''
+           Path to config file: {path}
+              ''')
+    if not (os.path.exists(path) and os.path.isfile(path)):
+        raise FileNotFoundError(f"File not found at {path}")
+    with open(path, "r") as f:
+        config = yaml.safe_load(f)
+    return config
 
 
-DATASET_CONFIGURATION = CONFIG.get("dataset_configuration", None)
-MODEL_CONFIGURATION = CONFIG.get("models", None)
-
-__all__ = ["CONFIG", "DATASET_CONFIGURATION", "MODEL_CONFIGURATION"]
+__all__ = ["get_config"]
