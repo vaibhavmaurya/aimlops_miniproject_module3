@@ -4,7 +4,7 @@ from datasets import DataSet
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from processing import WeekdayImputer,        \
+from bikeshare_model.processing import WeekdayImputer,        \
                        YearMonthImputer,      \
                        WeathersitImputer,     \
                        Mapper,                \

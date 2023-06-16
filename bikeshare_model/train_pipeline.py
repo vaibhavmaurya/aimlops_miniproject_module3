@@ -4,11 +4,26 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, SGDRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
-from datasets import DataSet
-import os
-from pipeline import get_pipeline
-from config import get_config
 import argparse
+import os
+import sys
+
+# Get the absolute path of the current file
+current_file_path = os.path.abspath(__file__)
+
+# Get the parent directory
+parent_dir = os.path.dirname(current_file_path)
+
+# Get the parent's parent directory
+grand_parent_dir = os.path.dirname(parent_dir)
+
+# Add the grand parent directory to the sys.path
+sys.path.insert(0, grand_parent_dir)
+
+
+from bikeshare_model.datasets import DataSet
+from bikeshare_model.pipeline import get_pipeline
+from bikeshare_model.config import get_config
 
 # print(f'''
 

@@ -12,6 +12,7 @@ include ./requirements/requirements.txt
 include ./requirements/test_requirements.txt
 exclude *.log
 exclude *.cfg
+exclude ./bikeshare_model_api
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

@@ -3,6 +3,9 @@ from predict import final_prediction
 from trained_models import get_metrics
 from config import get_config
 
+
+from bikeshare_model import get_metrics, final_prediction, get_config
+
 app = Flask(__name__)
 
 # Assuming you have models loaded, for example:
@@ -33,7 +36,7 @@ def predict_api():
 
     # Assume we have a function `predict` which uses the models to predict output
     print("Start Predicting")
-    predictions = final_prediction(data, CONFIG)
+    predictions = final_prediction([data], CONFIG)
     print("Predicting Done")
 
     response = {

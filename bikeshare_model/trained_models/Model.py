@@ -17,6 +17,9 @@ def load_models_and_predict(input_data, config):
     Returns:
         dict: A dictionary with the input data and the predictions from each model.
     """
+    print('''You want to predict the following data:''')
+    print()
+    print(input_data)
     preprocess_pipeline = joblib.load(os.path.join(config["pipeline_save_path"], "preprocess_pipeline.joblib"))
     DATASET_CONFIGURATION = config.get("dataset_configuration", None)
     MODEL_CONFIGURATION = config.get("models", None)

@@ -44,12 +44,17 @@ To run the Flask REST API, perform the following steps:
   `$ python3 setup.py sdist bdist_wheel`
 
 - Install the lib here
-  `$ python3 -m pip install dist/my_module-0.1-py3-none-any.whl`
+  `$ pip3 install -U dist/bikeshare_model-1.0.0-py3-none-any.whl`
 
 
-You can train the model as below.
+- You can train the model as below.
 
-`python3 train_pipeline.py --config <config.yml absolute path>`
+  `python3 train_pipeline.py --config <config.yml absolute path>`
+
+
+- Run the FAST API Service
+  `uvicorn api:app --reload`
+
 
 
 
