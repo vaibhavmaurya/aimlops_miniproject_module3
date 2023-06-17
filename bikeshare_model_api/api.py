@@ -12,7 +12,7 @@ from bikeshare_model import get_metrics, final_prediction, get_config
 
 app = FastAPI()
 
-CONFIG = get_config("/mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/config/config.yml")
+CONFIG = get_config("config/config.yml")
 
 class PredictData(BaseModel):
     dteday: str
