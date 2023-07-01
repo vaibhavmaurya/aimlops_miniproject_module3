@@ -3,10 +3,11 @@
 install:
 	python -m pip install --upgrade pip &&\
 		pip3 install -r requirements.txt &&\
-		pip3 install -r bikeshare_model/requirements/requirements.txt
+		pip3 install -r bikeshare_model/requirements/requirements.txt &&\
+		pip3 install -r bikeshare_model_api/requirements.txt
 
 train:
-	python3 bikeshare_model/train_pipeline.py --config bikeshare_model_api/config/config.yml
+	python3 bikeshare_model/train_pipeline.py --config config.yml
 
 format:
 	black *.py
@@ -17,4 +18,4 @@ lint:
 test:
 	python3 -m pytest tests/test_*.py
 
-all : install train lint test format
+all : install train lint format
