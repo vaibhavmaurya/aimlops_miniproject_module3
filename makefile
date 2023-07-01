@@ -1,7 +1,7 @@
 # makefile
 
 install:
-	python -m pip install --upgrade pip &&\
+	python3 -m pip install --upgrade pip &&\
 		pip3 install -r requirements.txt &&\
 		pip3 install -r bikeshare_model/requirements/requirements.txt &&\
 		pip3 install -r bikeshare_model_api/requirements.txt
