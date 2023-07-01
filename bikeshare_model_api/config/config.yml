@@ -1,5 +1,5 @@
 dataset_configuration:
-  csv_file_path: /mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/data/bike-sharing-dataset.csv
+  csv_file_path: /home/ec2-user/environment/dataset/data/bike-rental-dataset.csv
   numerical_variables: ['temp', 'atemp', 'hum', 'windspeed']
   categorical_variables: ['season', 'hr', 'holiday', 'weekday', 'workingday', 'weathersit', 'yr', 'mnth']
   Target_feature: cnt
@@ -15,6 +15,6 @@ models:
   - model_name: SGDRegressor
     model_parameters:
       penalty: l2
-model_save_path: /mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/models
-pipeline_save_path: /mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/pipeline
-model_metrics_save_path: /mnt/c/Users/91961/Documents/Learn/AIML/MLOps/MiniProject/Module3/model_metrics/metrics.json
+model_save_path: /home/ec2-user/environment/dataset/models
+pipeline_save_path: /home/ec2-user/environment/dataset//pipeline
+model_metrics_save_path: /home/ec2-user/environment/dataset//model_metrics/metrics.json
