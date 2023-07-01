@@ -6,7 +6,7 @@ from pathlib import Path
 from setuptools import find_packages, setup
 
 # Package meta-data.
-NAME = 'bikeshare_model'
+NAME = "bikeshare_model"
 DESCRIPTION = "Bikeshare dataset regression model package "
 EMAIL = "vaibhav.sense@gmail.com"
 AUTHOR = "Vaibhav Maurya"
@@ -24,17 +24,18 @@ long_description = DESCRIPTION
 about = {}
 ROOT_DIR = Path(__file__).resolve().parent
 print(ROOT_DIR)
-REQUIREMENTS_DIR = ROOT_DIR / 'bikeshare_model' / 'requirements'
-PACKAGE_DIR = ROOT_DIR / 'bikeshare_model'
-with open(PACKAGE_DIR / "VERSION") as f:
+REQUIREMENTS_DIR = ROOT_DIR / "bikeshare_model" / "requirements"
+PACKAGE_DIR = ROOT_DIR / "bikeshare_model"
+with open(PACKAGE_DIR / "VERSION", encoding="UTF-8") as f:
     _version = f.read().strip()
     about["__version__"] = _version
 
 
 # What packages are required for this module to be executed?
 def list_reqs(fname="requirements.txt"):
-    with open(REQUIREMENTS_DIR / fname) as fd:
+    with open(REQUIREMENTS_DIR / fname, encoding="UTF-8") as fd:
         return fd.read().splitlines()
+
 
 # Where the magic happens:
 setup(
@@ -65,5 +66,5 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
-    ]
+    ],
 )
