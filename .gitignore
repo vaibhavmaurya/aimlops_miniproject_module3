@@ -15,7 +15,6 @@ bikeshare_model_api/*.whl
 # Distribution / packaging
 .Python
 bikeshare_model.egg-info/
-tests/
 build/
 develop-eggs/
 dist/
