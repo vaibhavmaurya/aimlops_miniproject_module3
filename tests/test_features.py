@@ -31,6 +31,13 @@ def test_weekday_variable_imputer(sample_input_data):
           subject.loc[7091, 'weekday'] = {subject.loc[0, 'weekday']}''')
 
 
+# Test set for WeathersitImputer is not available
+# def test_weathersit_variable_imputer(sample_input_data):
+#     # Given
+#     imputer = WeathersitImputer()
+#     assert not pd.isna(sample_input_data.loc[0, 'weathersit'])
+
+
 
 # def test_weekday_variable_imputer(sample_input_data):
 #     # Given
