@@ -1,5 +1,4 @@
 astroid==2.3.3
-aws-cfn-bootstrap==2.0
 backcall==0.2.0
 black==23.3.0
 botocore==1.29.158
