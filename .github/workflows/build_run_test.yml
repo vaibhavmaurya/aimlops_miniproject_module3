@@ -42,3 +42,11 @@ jobs:
         # run the Predict
         python3 predict.py --config config.yml
 
+    - name: run testcases
+      run: |
+        cd bikeshare_model
+        echo "changed working directory to: ".$PWD
+        
+        # run the test-case
+        pytest -v
+
