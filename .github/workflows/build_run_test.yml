@@ -18,9 +18,12 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip3 install pylint
+        pip3 install -r requirements.txt
     - name: train the model 
       run: |
         echo "current working directory: ".$PWD
         cd bikeshare_model
+        echo "changed working directory to: ".$PWD
+        
         python3 train_pipeline.py --config config.yml 
         
