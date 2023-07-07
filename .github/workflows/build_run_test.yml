@@ -74,7 +74,7 @@ jobs:
       run: |
         echo "working directory to: ".$PWD
         echo "building docker image from current folder"
-        echo "Docker repo name: ".${{ DOCKER_REPO_NAME }}
+        echo "Docker repo name: ".${{ env.DOCKER_REPO_NAME }}
         docker build -t bikeshare .
         
         # displaying docker images
