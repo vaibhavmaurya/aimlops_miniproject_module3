@@ -32,4 +32,13 @@ jobs:
         
         # run the pipeline
         python3 train_pipeline.py --config config.yml 
+
+    - name: run predict 
+      run: |
+        echo "current working directory: ".$PWD
+        cd bikeshare_model
+        echo "changed working directory to: ".$PWD
         
+        # run the Predict
+        python3 predict.py --config config.yml
+
