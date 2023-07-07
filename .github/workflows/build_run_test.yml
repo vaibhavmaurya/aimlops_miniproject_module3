@@ -27,6 +27,11 @@ jobs:
         echo "current working directory: ".$PWD
         cd bikeshare_model
         echo "changed working directory to: ".$PWD
+        # create local directories
+        mkdir models
+        mkdir pipeline
+        mkdir model_metrics
         
+        # run the pipeline
         python3 train_pipeline.py --config config.yml 
         
