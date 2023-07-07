@@ -21,6 +21,7 @@ jobs:
         pip3 install joblib
         pip3 install scikit-learn
         pip3 install pandas
+        pip3 install pyyaml
     - name: train the model 
       run: |
         echo "current working directory: ".$PWD
