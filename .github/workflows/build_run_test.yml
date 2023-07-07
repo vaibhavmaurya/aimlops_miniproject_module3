@@ -1,0 +1,26 @@
+name: build_run_and_test
+
+on:
+  push:
+    branches:
+      - mod4_ast2
+#      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 
+      uses: actions/setup-python@v3
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install pylint
+    - name: train the model 
+      run: |
+        echo "current working directory: ".$PWD
+        cd bikeshare_model
+        python3 train_pipeline.py --config config.yml 
+        
