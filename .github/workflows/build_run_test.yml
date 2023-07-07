@@ -70,12 +70,16 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_NAME: "bikeshare"
-          DOCKER_REPO_NAME: "bikeshare"
+          DOCKER_REPO_NAME: "mphaniram/bikeshare"
+          DOCKER_IMG_VERSION: "1.0.0"
       run: |
         echo "working directory to: ".$PWD
         echo "building docker image from current folder"
         echo "Docker repo name: ".${{ env.DOCKER_REPO_NAME }}
-        docker build -t bikeshare .
+        docker build -t ${{ env.DOCKER_REPO_NAME }} .
+        
+        # add latest and specific release-version to image
+        docker tag ${{ env.DOCKER_REPO_NAME }}:latest ${{ env.DOCKER_REPO_NAME }}:${{ env.DOCKER_IMG_VERSION }}
         
         # displaying docker images
         docker images
