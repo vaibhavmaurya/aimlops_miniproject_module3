@@ -60,6 +60,11 @@ jobs:
 #      with:
 #        username: ${{ secrets.DOCKERHUB_USERNAME }}
 #        password: ${{ secrets.DOCKERHUB_TOKEN }}  
+
+    - name: create bikeshare distribution
+      run: |
+        echo "working directory to: ".$PWD
+        python3 setup.py bdist_wheel
         
     - name: execute docker run
       env:
@@ -69,6 +74,7 @@ jobs:
       run: |
         echo "working directory to: ".$PWD
         echo "building docker image from current folder"
+        echo "Docker repo name: ".${{ DOCKER_REPO_NAME }}
         docker build -t bikeshare .
         
         # displaying docker images
