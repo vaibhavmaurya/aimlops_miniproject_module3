@@ -57,7 +57,7 @@ jobs:
       uses: docker/login-action@v2
       with:
         username: "mphaniram"
-        password: ""  
+        password: "dckr_pat_lqHqPTgje1cSFVjvebYjwsBoKg0"  
 
 #        username: ${{ secrets.DOCKERHUB_USERNAME }}
 #        password: ${{ secrets.DOCKERHUB_TOKEN }}  
@@ -69,8 +69,8 @@ jobs:
         
     - name: execute docker run
       env:
-          RELEASE_NAME: "bikeshare"
-          DOCKER_REPO_NAME: "mphaniram/bikeshare"
+          RELEASE_NAME: "bikeshare2"
+          DOCKER_REPO_NAME: "mphaniram/bikeshare2"
           DOCKER_IMG_VERSION: "7.1.2"
       run: |
         echo "working directory to: ".$PWD
@@ -86,8 +86,8 @@ jobs:
 
     - name: docker push
       env:
-          RELEASE_NAME: "bikeshare"
-          DOCKER_REPO_NAME: "mphaniram/bikeshare"
+          RELEASE_NAME: "bikeshare2"
+          DOCKER_REPO_NAME: "mphaniram/bikeshare2"
           DOCKER_IMG_VERSION: "7.1.2"
       run: |
         echo "pushing docker image  - ".${{ env.DOCKER_REPO_NAME }}.":latest"
