@@ -88,7 +88,7 @@ jobs:
       env:
           RELEASE_NAME: "bikeshare2"
           DOCKER_REPO_NAME: "mphaniram/bikeshare2"
-          DOCKER_IMG_VERSION: "7.1.2"
+          DOCKER_IMG_VERSION: "22.0.4"
       run: |
         echo "pushing docker image  - ".${{ env.DOCKER_REPO_NAME }}.":latest"
         echo "pushing docker image  - ".${{ env.DOCKER_REPO_NAME }}:${{ env.DOCKER_IMG_VERSION }}
