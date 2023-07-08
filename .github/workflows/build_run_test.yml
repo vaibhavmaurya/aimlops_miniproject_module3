@@ -19,7 +19,7 @@ jobs:
         python3 -m pip install --upgrade pip
         pip3 install -r requirements/requirements.txt
         pip3 install pylint
-        pip3 install pyt
+        pip3 install pytest
         
     - name: train the model 
       run: |
@@ -57,7 +57,7 @@ jobs:
       uses: docker/login-action@v2
       with:
         username: "mphaniram"
-        password: ""  
+        password: "dckr_pat_lqHqPTgje1cSFVjvebYjwsBoKg0"  
 
 #        username: ${{ secrets.DOCKERHUB_USERNAME }}
 #        password: ${{ secrets.DOCKERHUB_TOKEN }}  
@@ -71,7 +71,7 @@ jobs:
       env:
           RELEASE_NAME: "bikeshare2"
           DOCKER_REPO_NAME: "mphaniram/bikeshare2"
-          DOCKER_IMG_VERSION: "7.1.2"
+          DOCKER_IMG_VERSION: "22.0.4"
       run: |
         echo "working directory to: ".$PWD
         echo "building docker image from current folder"
