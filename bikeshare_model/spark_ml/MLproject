@@ -1,0 +1,8 @@
+name: pyspark-ml
+
+docker_env:
+  image:  mlflow-docker-bikeshare
+
+entry_points:
+  main:
+    command: "python data_processing.py"
