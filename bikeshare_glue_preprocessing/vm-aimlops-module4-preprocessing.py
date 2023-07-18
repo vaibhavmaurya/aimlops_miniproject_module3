@@ -5,12 +5,20 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 
-
+import boto3
 from awsglue.dynamicframe import DynamicFrame
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, when
 from pyspark.ml import Transformer
 from pyspark.ml import Pipeline
+from pyspark.ml.feature import MinMaxScaler, VectorAssembler
+from pyspark.ml.feature import OneHotEncoder, StringIndexer
+from pyspark.sql.functions import create_map, lit, col
+from itertools import chain
+from pyspark.ml.feature import VectorSlicer
+from pyspark.sql.functions import udf, col
+from pyspark.sql.types import ArrayType, DoubleType
+from pyspark.ml.linalg import DenseVector, VectorUDT
 
 
 
@@ -33,7 +41,7 @@ S3bucket_node1 = glueContext.create_dynamic_frame.from_options(
     connection_type="s3",
     format="csv",
     connection_options={
-        "paths": ["s3://vm-aimlops-2023/module_4/data/"],
+        "paths": ["s3://vm-aimlops-2023/module_4/data/training/"],
         "recurse": True,
     },
     transformation_ctx="S3bucket_node1",
@@ -41,91 +49,195 @@ S3bucket_node1 = glueContext.create_dynamic_frame.from_options(
 
 
 ####################Imputers######################################
+        
 
-class YearMonthImputer(Transformer):
+class OutlierHandler(Transformer):
     """
-    A custom Transformer which extracts year and month from a date column.
+    A custom Transformer which detects outliers in specified columns using the Interquartile Range (IQR) method,
+    and replaces them with the lower or upper bound respectively.
     """
-    def __init__(self):
-        pass
+    def __init__(self, columns=None, factor=1.5):
+        self.columns = columns
+        self.factor = factor
 
     def _transform(self, df):
         """
-        Transforms the input DataFrame by adding year and month columns.
-        Assumes that the input DataFrame has a column named 'dteday' of type Date.
+        Transforms the input DataFrame by replacing outlier values.
         """
-        # Convert 'dteday' to Date type if it's not already
-        df = df.withColumn('dteday', F.to_date(col('dteday'), 'yyyy-MM-dd'))
-        # Create 'yr' and 'mnth' columns based on 'dteday' column
-        df = df.withColumn('yr', F.year(col('dteday'))) \
-               .withColumn('mnth', F.month(col('dteday')))
+        for column in self.columns:
+            quantiles = df.stat.approxQuantile(column, [0.25, 0.75], 0.05)
+            IQR = quantiles[1] - quantiles[0]
+            lower_bound = quantiles[0] - self.factor * IQR
+            upper_bound = quantiles[1] + self.factor * IQR
+            df = df.withColumn(column, 
+                               when(col(column) < lower_bound, lower_bound) \
+                               .when(col(column) > upper_bound, upper_bound) \
+                               .otherwise(col(column)))
         return df
 
+        
 
-class WeekdayImputer(Transformer):
-    """
-    A custom Transformer which imputes missing values in 'weekday' column with the weekday derived from 'dteday'.
-    """
-    def __init__(self):
-        pass
-
-    def _transform(self, df):
-        """
-        Transforms the input DataFrame by filling nulls in 'weekday' column with the weekday of 'dteday'.
-        """
-        # Impute missing 'weekday' values with the day of the week from 'dteday'
-        df = df.withColumn('weekday', 
-                           when(col('weekday').isNull(), F.date_format(col('dteday'), 'E')) \
-                           .otherwise(col('weekday')))
-        return df
-
-
-class WeathersitImputer(Transformer):
-    """
-    A custom Transformer which imputes missing values in 'weathersit' column with 'Clear'.
-    """
-    def __init__(self):
-        pass
-
-    def _transform(self, df):
-        """
-        Transforms the input DataFrame by filling nulls in 'weathersit' column with 'Clear'.
-        """
-        # Impute missing 'weathersit' values with 'Clear'
-        df = df.withColumn('weathersit', 
-                           when(col('weathersit').isNull(), 'Clear') \
-                           .otherwise(col('weathersit')))
-        return df
         
 ######################Imputers end####################################
+
+
+
+
+
 
 ################ Applying imputers ###############################
 
 # Convert DynamicFrame to Spark DataFrame for transformations
 dataframe = S3bucket_node1.toDF()
 
+# Lets do some transformations here
+# Specify the columns to be casted
+int_columns = ["casual", "registered", "cnt"]  # replace with your actual column names
+decimal_columns = ["temp", "atemp", "hum", "windspeed"]  # replace with your actual column names
+
+# Cast to integer
+for col_name in int_columns:
+    dataframe = dataframe.withColumn(col_name, col(col_name).cast("integer"))
+
+# Cast to decimal
+for col_name in decimal_columns:
+    dataframe = dataframe.withColumn(col_name, col(col_name).cast("decimal"))
+    
+    
+    
+# Change weathersit column
+dataframe = dataframe.withColumn('weathersit', when(col('weathersit').isNull(), 'Clear').otherwise(col('weathersit')))
+
+
+# Convert 'dteday' to Date type if it's not already
+dataframe = dataframe.withColumn('dteday', F.to_date(col('dteday'), 'yyyy-MM-dd'))
+# Create 'yr' and 'mnth' columns based on 'dteday' column
+dataframe = dataframe.withColumn('yr', F.year(col('dteday'))) \
+       .withColumn('mnth', F.month(col('dteday')))
+
+# Convert weekday column
+dataframe = dataframe.withColumn('weekday', 
+                           when(col('weekday').isNull(), F.date_format(col('dteday'), 'E')) \
+                           .otherwise(col('weekday')))
+                           
+# Impute the weekday to One hot encoding
+# List of three-letter abbreviations for the days of the week
+days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+# Create a column for each day of the week
+for day in days:
+    dataframe = dataframe.withColumn("weekday_"+day, (col("weekday") == day).cast("int"))
+    
+# Drop the original 'weekday' column
+dataframe = dataframe.drop("weekday")
+
+# Now, the specified columns in dataframe have been casted to the specified types
 
 # Create instances of our custom Transformers
-year_month_imputer = YearMonthImputer()
-weekday_imputer = WeekdayImputer()
-weathersit_imputer = WeathersitImputer()
 
-# Create a PySpark ML Pipeline with our Transformers
-pipeline = Pipeline(stages=[year_month_imputer, weekday_imputer, weathersit_imputer])
+# Create the outlier handler
+outlier_handler = OutlierHandler(columns=['temp', 'atemp', 'hum', 'windspeed'])
 
-# Apply the transformations
+
+# Following is the mapping
+from pyspark.sql.functions import create_map, lit, col
+from itertools import chain
+
+# Mapping dictionaries
+yr_mapping = {2011: 0, 2012: 1}
+mnth_mapping = {'January': 0, 'February': 1, 'December': 2, 
+                'March': 3, 'November': 4, 'April': 5, 
+                'October': 6, 'May': 7, 'September': 8, 
+                'June': 9, 'July': 10, 'August': 11}
+season_mapping = {'spring': 0, 'winter': 1, 'summer': 2, 'fall': 3}
+weather_mapping = {'Heavy Rain': 0, 'Light Rain': 1, 'Mist': 2, 'Clear': 3}
+workingday_mapping = {'No': 0, 'Yes': 1}
+hour_mapping = {'4am': 0, '3am': 1, '5am': 2, '2am': 3, '1am': 4, 
+                '12am': 5, '6am': 6, '11pm': 7, '10pm': 8, 
+                '10am': 9, '9pm': 10, '11am': 11, '7am': 12, '9am': 13, 
+                '8pm': 14, '2pm': 15, '1pm': 16, 
+                '12pm': 17, '3pm': 18, '4pm': 19, '7pm': 20, '8am': 21, 
+                '6pm': 22, '5pm': 23}
+holiday_mapping = {'Yes': 0, 'No': 1}
+
+mapping = {
+    'yr'        :yr_mapping,
+    'mnth'      :mnth_mapping,
+    'season'    :season_mapping,
+    'weathersit':weather_mapping,
+    'holiday'   :holiday_mapping,
+    'workingday':workingday_mapping,
+    'hr'        :hour_mapping
+}
+
+# Apply the mappings to the DataFrame
+for column, map_dict in mapping.items():
+    mapping_expr = create_map([lit(x) for x in chain(*map_dict.items())])
+    dataframe = dataframe.withColumn(column, mapping_expr.getItem(col(column)))
+    
+    
+    
+# Remove unused columns here
+# List of columns to remove
+columns_to_remove = ['dteday', 'casual', 'registered']
+
+# Remove the columns
+dataframe = dataframe.drop(*columns_to_remove)
+
+
+# First we need to convert the input data frame to a dense vector 
+# VectorAssembler is used to transform and return a new DataFrame with all of the feature columns in a vector column.
+# Specify the features to be scaled
+features_to_scale = ['temp', 'atemp', 'hum', 'windspeed']  # replace with your actual column names
+
+
+# # # First, assemble the features to be scaled into a single vector column
+assembler = VectorAssembler(inputCols=features_to_scale, outputCol="assembled")
+scaler = MinMaxScaler(inputCol="assembled", outputCol="scaled")
+
+# # # Create a PySpark ML Pipeline with our Transformers
+pipeline = Pipeline(stages=[assembler, scaler])
+
+# # Define a pipeline for transformation
+pipeline = Pipeline(stages=[assembler, scaler])
+
+# # Fit and transform
 model = pipeline.fit(dataframe)
-dataframe_transformed = model.transform(dataframe)
+df_scaled = model.transform(dataframe)
 
-# Convert transformed DataFrame back to DynamicFrame
-dynamic_frame_transformed = DynamicFrame.fromDF(dataframe_transformed, glueContext, "dynamic_frame_transformed")
+# # Save this pipeline
+# local_path = "/tmp/standardscaler"
+# model.write().overwrite().save(local_path)
+# # model.write().overwrite().save("s3://vm-aimlops-2023/module_4/feature_store/standardscaler")
+
+# # Use Boto3 to copy the local file to S3
+# s3 = boto3.resource('s3')
+# # Get a handle to the S3 bucket
+# s3.Bucket("vm-aimlops-2023").upload_file(local_path, "s3://vm-aimlops-2023/module_4/feature_store/standardscaler")
+
+# # Convert the vector to an array
+to_array = udf(lambda v: v.toArray().tolist(), ArrayType(DoubleType()))
+df_scaled = df_scaled.withColumn("scaled_array", to_array(df_scaled["scaled"]))
+
+# # Now we need to disassemble the scaled features back to their original form
+for i, feature in enumerate(features_to_scale):
+    df_scaled = df_scaled.withColumn(feature, df_scaled["scaled_array"].getItem(i))
+
+# # You can drop the temporary columns if you want
+df_scaled = df_scaled.drop("assembled", "scaled", "scaled_array")
+
+
+# # Convert transformed DataFrame back to DynamicFrame
+dynamic_frame_transformed = DynamicFrame.fromDF(df_scaled, glueContext, "dynamic_frame_transformed")
 
 
 ################ Applying imputers ends ##########################
 
-# Script generated for node ApplyMapping
+
+
+# # Script generated for node ApplyMapping
 # ApplyMapping_node2 = ApplyMapping.apply(
-#     frame=S3bucket_node1,
+#     frame=dynamic_frame_transformed,
 #     mappings=[
 #         ("dteday", "string", "dteday", "string"),
 #         ("season", "string", "season", "string"),
@@ -138,12 +250,16 @@ dynamic_frame_transformed = DynamicFrame.fromDF(dataframe_transformed, glueConte
 #         ("atemp", "decimal", "atemp", "string"),
 #         ("hum", "decimal", "hum", "string"),
 #         ("windspeed", "decimal", "windspeed", "string"),
-#         ("casual", "int", "casual", "string"),
-#         ("registered", "int", "registered", "string"),
-#         ("cnt", "int", "cnt", "string"),
+#         ("casual", "decimal", "casual", "string"),
+#         ("registered", "decimal", "registered", "string"),
+#         ("cnt", "decimal", "cnt", "string"),
 #     ],
 #     transformation_ctx="ApplyMapping_node2",
 # )
+
+
+glueContext.purge_s3_path("s3://vm-aimlops-2023/module_4/feature_store/training/", options={}, transformation_ctx="")
+
 
 
 # Script generated for node S3 bucket
@@ -152,7 +268,7 @@ S3bucket_node3 = glueContext.write_dynamic_frame.from_options(
     connection_type="s3",
     format="csv",
     connection_options={
-        "path": "s3://vm-aimlops-2023/module_4/feature_store/",
+        "path": "s3://vm-aimlops-2023/module_4/feature_store/training/",
         "partitionKeys": [],
     },
     transformation_ctx="S3bucket_node3",
