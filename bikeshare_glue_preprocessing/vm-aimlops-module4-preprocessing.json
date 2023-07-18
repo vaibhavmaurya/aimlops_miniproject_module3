@@ -1,0 +1,39 @@
+{
+  "name" : "vm-aimlops-module4-preprocessing",
+  "description" : "Preprocessing job for module 4",
+  "role" : "arn:aws:iam::135671745449:role/vm-aimlops-module4-role-gluejob-s3",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://vm-aimlops-2023/module_4/glue/script/vm-aimlops-module4-preprocessing.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://vm-aimlops-2023/module_4/glue/sparkHistoryLogs/",
+    "--enable-job-insights" : "true",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://vm-aimlops-2023/module_4/glue/temporary/"
+  },
+  "maxRetries" : 1,
+  "allocatedCapacity" : 2,
+  "timeout" : 10,
+  "maxCapacity" : 2.0,
+  "glueVersion" : "4.0",
+  "numberOfWorkers" : 2,
+  "workerType" : "G.1X",
+  "executionClass" : "FLEX",
+  "codeGenConfigurationNodes" : "{\"node-1\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://vm-aimlops-2023/module_4/data/bike-sharing-dataset.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Multiline\":true,\"Name\":\"S3 bucket\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"dteday\",\"Type\":\"string\"},{\"Name\":\"season\",\"Type\":\"string\"},{\"Name\":\"hr\",\"Type\":\"string\"},{\"Name\":\"holiday\",\"Type\":\"string\"},{\"Name\":\"weekday\",\"Type\":\"string\"},{\"Name\":\"workingday\",\"Type\":\"string\"},{\"Name\":\"weathersit\",\"Type\":\"string\"},{\"Name\":\"temp\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"atemp\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"hum\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"windspeed\",\"Type\":\"decimal(10,2)\"},{\"Name\":\"casual\",\"Type\":\"int\"},{\"Name\":\"registered\",\"Type\":\"int\"},{\"Name\":\"cnt\",\"Type\":\"int\"}]}],\"Paths\":[\"s3://vm-aimlops-2023/module_4/data/\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":true}},\"node-2\":{\"ApplyMapping\":{\"Inputs\":[\"node-1\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"dteday\"],\"FromType\":\"string\",\"ToKey\":\"dteday\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"season\"],\"FromType\":\"string\",\"ToKey\":\"season\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"hr\"],\"FromType\":\"string\",\"ToKey\":\"hr\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"holiday\"],\"FromType\":\"string\",\"ToKey\":\"holiday\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"weekday\"],\"FromType\":\"string\",\"ToKey\":\"weekday\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"workingday\"],\"FromType\":\"string\",\"ToKey\":\"workingday\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"weathersit\"],\"FromType\":\"string\",\"ToKey\":\"weathersit\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"temp\"],\"FromType\":\"decimal\",\"ToKey\":\"temp\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"atemp\"],\"FromType\":\"decimal\",\"ToKey\":\"atemp\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"hum\"],\"FromType\":\"decimal\",\"ToKey\":\"hum\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"windspeed\"],\"FromType\":\"decimal\",\"ToKey\":\"windspeed\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"casual\"],\"FromType\":\"int\",\"ToKey\":\"casual\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"registered\"],\"FromType\":\"int\",\"ToKey\":\"registered\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"cnt\"],\"FromType\":\"int\",\"ToKey\":\"cnt\",\"ToType\":\"string\"}],\"Name\":\"ApplyMapping\"}},\"node-3\":{\"S3DirectTarget\":{\"Compression\":\"none\",\"Format\":\"csv\",\"Inputs\":[\"node-2\"],\"Name\":\"S3 bucket\",\"PartitionKeys\":[],\"Path\":\"s3://vm-aimlops-2023/module_4/feature_store/\",\"SchemaChangePolicy\":{\"EnableUpdateCatalog\":false,\"UpdateBehavior\":\"UPDATE_IN_DATABASE\"}}}}",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "aimlops_miniproject_module3",
+    "branch" : "development",
+    "folder" : "bikeshare_glue_preprocessing"
+  }
+}
