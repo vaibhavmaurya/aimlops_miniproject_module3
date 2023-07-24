@@ -22,3 +22,8 @@ def weekDayImputerfn(batch: DataFrame) -> DataFrame:
     weekday = pd.to_datetime(dteday, format='%Y-%m-%d').dt.day_name().apply(lambda x : x[:3])
     batch['weekday'] = batch['weekday'].fillna(weekday)
     return batch
+
+def removeUnusedColumns(batch: DataFrame) -> DataFrame:
+    unused_colms = ['dteday', 'casual', 'registered', 'weekday']
+    batch.drop(labels = unused_colms, axis = 1, inplace = True)
+    return batch
